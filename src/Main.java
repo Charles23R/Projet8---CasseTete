@@ -1,7 +1,8 @@
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -123,34 +124,24 @@ public class Main extends Application {
             ImageView target = (ImageView)event.getGestureTarget();
             ImageView source = (ImageView)event.getGestureSource();
             Image tempo = source.getImage();
+            double rotateTarget = target.getRotate();
+            double rotateSource = source.getRotate();
             source.setImage(target.getImage());
             target.setImage(tempo);
-
+            source.setRotate(rotateTarget);
+            target.setRotate(rotateSource);
 
             event.setDropCompleted(true);
         });
 
         imageView.setOnDragDone(event -> {
-            boolean done=true;
-
-            for (int i=0; i<list.size(); i++){
-                System.out.println(list.get(i).getImage().equals(imagesTrue.get(i)));
-                if(!list.get(i).getImage().equals(imagesTrue.get(i)))
-                    done=false;
-            }
-
-            if (done){
-                Alert alert = new Alert (Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Partie terminée");
-                alert.setHeaderText("Félicitations! Vous avez réussi!");
-                alert.setContentText("Que voulez-vous faire?");
-                alert.showAndWait();
-            }
+            verif();
         });
 
 
         imageView.setOnMouseClicked(event1 -> {
             imageView.setRotate(imageView.getRotate()+90);
+            verif();
         });
 
     }
@@ -161,7 +152,39 @@ public class Main extends Application {
 
         Collections.shuffle(images);
 
-        for (int i=0; i<images.size(); i++)
+        for (int i=0; i<images.size(); i++) {
             list.get(i).setImage(images.get(i));
+            list.get(i).setRotate((int)(Math.random() * 4) * 90);
+        }
+    }
+
+    public void verif(){
+        boolean done=true;
+
+        for (int i=0; i<list.size(); i++){
+            System.out.println(list.get(i).getImage().equals(imagesTrue.get(i)));
+            if(!list.get(i).getImage().equals(imagesTrue.get(i)) ||
+                    list.get(i).getRotate()%360!=0)
+                done=false;
+        }
+
+        if (done){
+
+            Label feli = new Label("FÉLICITATIONS");
+            Label ok = new Label("Vous avez réussi. Voulez-vous rejouer?");
+
+            VBox vBox = new VBox(feli, ok);
+            vBox.setPadding(new Insets(20));
+
+            Dialog dialog = new Dialog();
+            dialog.getDialogPane().setContent(vBox);
+            dialog.setTitle("Partie Terminée");
+
+            dialog.getDialogPane().getButtonTypes().add(
+                    new ButtonType("Rejouer"));
+
+            dialog.showAndWait();
+            shuffle();
+        }
     }
 }
