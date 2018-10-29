@@ -30,10 +30,31 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Casse-Tête");
         primaryStage.setResizable(true);
-        primaryStage.setHeight(500);
-        primaryStage.setWidth(500);
+        primaryStage.setHeight(900);
+        primaryStage.setWidth(900);
         primaryStage.setMaxWidth(1000);
 
+
+        MenuItem raph = new MenuItem("Raphaël");
+        MenuItem marioMenu = new MenuItem("Mario");
+        MenuItem max = new MenuItem("Maxime");
+        MenuItem legault = new MenuItem("Marc-Antoine");
+
+        Menu menu = new Menu("Images");
+        menu.getItems().addAll(raph, marioMenu, max, legault);
+
+        MenuBar menuBar = new MenuBar(menu);
+
+        Image[] tableau1 = {
+                new Image("raph/raph0.jpg"),
+                new Image("raph/raph1.jpg"),
+                new Image("raph/raph2.jpg"),
+                new Image("raph/raph3.jpg"),
+                new Image("raph/raph4.jpg"),
+                new Image("raph/raph5.jpg"),
+                new Image("raph/raph6.jpg"),
+                new Image("raph/raph7.jpg"),
+                new Image("raph/raph8.jpg")};
 
         Image[] tableau2 = {
                 new Image("images/mario0.jpg"),
@@ -45,6 +66,28 @@ public class Main extends Application {
                 new Image("images/mario6.jpg"),
                 new Image("images/mario7.jpg"),
                 new Image("images/mario8.jpg")};
+
+        Image[] tableau3 = {
+                new Image("max/max0.jpg"),
+                new Image("max/max1.jpg"),
+                new Image("max/max2.jpg"),
+                new Image("max/max3.jpg"),
+                new Image("max/max4.jpg"),
+                new Image("max/max5.jpg"),
+                new Image("max/max6.jpg"),
+                new Image("max/max7.jpg"),
+                new Image("max/max8.jpg")};
+
+        Image[] tableau4 = {
+                new Image("leg/leg0.jpg"),
+                new Image("leg/leg1.jpg"),
+                new Image("leg/leg2.jpg"),
+                new Image("leg/leg3.jpg"),
+                new Image("leg/leg4.jpg"),
+                new Image("leg/leg5.jpg"),
+                new Image("leg/leg6.jpg"),
+                new Image("leg/leg7.jpg"),
+                new Image("leg/leg8.jpg")};
 
         ImageView[] tableau = {
                 new ImageView(tableau2[0]),
@@ -87,11 +130,19 @@ public class Main extends Application {
 
         primaryStage.widthProperty().addListener(stageSizeListener);
         primaryStage.heightProperty().addListener(stageSizeListener);
-        primaryStage.minHeightProperty().bind(primaryStage.widthProperty().multiply(1));
-        primaryStage.maxHeightProperty().bind(primaryStage.widthProperty().multiply(1));
+        primaryStage.maxHeightProperty().bind(primaryStage.widthProperty().multiply(1500/1920));
+        primaryStage.minHeightProperty().bind(primaryStage.widthProperty().multiply(1920/1080));
+
+
+        //MEnus
+        raph.setOnAction(event -> change(tableau1));
+        marioMenu.setOnAction(event -> change(tableau2));
+        max.setOnAction(event -> change(tableau3));
+        legault.setOnAction(event -> change(tableau4));
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
+        borderPane.setTop(menuBar);
 
         Scene scene = new Scene(borderPane);
 
@@ -186,5 +237,17 @@ public class Main extends Application {
             dialog.showAndWait();
             shuffle();
         }
+    }
+
+    public void change(Image[] tableau){
+        imagesTrue.clear();
+        images.clear();
+
+        for (int i = 0; i<tableau.length; i++) {
+            imagesTrue.add(tableau[i]);
+            images.add(tableau[i]);
+        }
+
+        shuffle();
     }
 }
