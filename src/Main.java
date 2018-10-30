@@ -25,7 +25,6 @@ public class Main extends Application {
     public static ArrayList<Image> imagesTrue = new ArrayList<Image>();
     public static ArrayList<Image> images = new ArrayList<>();
 
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Casse-Tête");
@@ -33,6 +32,7 @@ public class Main extends Application {
         primaryStage.setHeight(900);
         primaryStage.setWidth(900);
         primaryStage.setMaxWidth(1000);
+        primaryStage.setMinWidth(500);
 
 
         MenuItem raph = new MenuItem("Raphaël");
@@ -119,13 +119,14 @@ public class Main extends Application {
         HBox hBox3 = new HBox(list.get(6), list.get(7), list.get(8));
 
         VBox vBox = new VBox(hBox1, hBox2, hBox3);
+        vBox.setPadding(new Insets(10, 40, 10, 40));
 
         shuffle();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
             for (int i=0; i<list.size(); i++){
                 list.get(i).fitWidthProperty().bind(primaryStage.widthProperty());
-                list.get(i).setFitHeight(list.get(i).getFitWidth()/3);
+                list.get(i).setFitHeight(list.get(i).getFitWidth()/3.5);
             } };
 
         primaryStage.widthProperty().addListener(stageSizeListener);
@@ -220,22 +221,20 @@ public class Main extends Application {
         }
 
         if (done){
+            Alert alerte = new Alert(Alert.AlertType.CONFIRMATION);
+            alerte.setTitle("Partie terminée");
+            alerte.setHeaderText("Vous avez réussi! Félicitations!");
+            alerte.setContentText("Voulez-vous rejouer?");
 
-            Label feli = new Label("FÉLICITATIONS");
-            Label ok = new Label("Vous avez réussi. Voulez-vous rejouer?");
+            ButtonType rejouer = new ButtonType("Rejouer", ButtonBar.ButtonData.OK_DONE);
+            ButtonType annuler = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alerte.getButtonTypes().clear();
+            alerte.getButtonTypes().add(rejouer);
+            alerte.getButtonTypes().add(annuler);
 
-            VBox vBox = new VBox(feli, ok);
-            vBox.setPadding(new Insets(20));
-
-            Dialog dialog = new Dialog();
-            dialog.getDialogPane().setContent(vBox);
-            dialog.setTitle("Partie Terminée");
-
-            dialog.getDialogPane().getButtonTypes().add(
-                    new ButtonType("Rejouer"));
-
-            dialog.showAndWait();
-            shuffle();
+            ButtonType resultat = alerte.showAndWait().get();
+            if(resultat == rejouer)
+                shuffle();
         }
     }
 
